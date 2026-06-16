@@ -7,9 +7,7 @@ Build a vision pipeline that detects people, segments each one with a pixel-accu
 **Instance Segmentation (stage 2) EI project:** https://studio.edgeimpulse.com/public/951718/live  
 **GitHub repository:** https://github.com/SamuelAlexander/instance-seg-byom-freeform-person-blur  
 
-<Frame caption="The person-blur application: people blurred with pixel-accurate masks while the background stays sharp.">
-  ![Person blurred in real time](images/blurred-engineer.gif)
-</Frame>
+![Person blurred in real time](images/blurred-engineer.gif)
 
 ## Introduction
 
@@ -22,15 +20,11 @@ Edge Impulse ships classification and object detection as built-in learning bloc
 
 To keep it concrete, we build a **person-blur privacy application**: Stage 1 detects people, Stage 2 segments each one, and the app blurs them using their pixel-accurate masks so the person is hidden while the background stays sharp, which is hard to achieve with bounding boxes alone. The whole pipeline runs through the Edge Impulse Linux runtime on a Qualcomm QCS6490, and because it is built on `.eim` files, the same code runs on any Edge Impulse Linux target.
 
-<Frame caption="Person-blur running on a recorded clip: each player is masked and blurred while the court stays sharp.">
-  ![Person-blur on a tennis clip](images/blurred-tennis.gif)
-</Frame>
+![Person-blur on a tennis clip](images/blurred-tennis.gif)
 
 What makes this an edge AI application is that it runs live, on the device. With a USB webcam plugged into the board, the cascade processes each frame as it arrives and blurs people in real time, with no cloud round-trip. That is the whole point of running inference at the edge: the application keeps working offline, adds no network latency, and, for a privacy use case like this, raw video never leaves the device. The clip below shows the full cascade running live on the Rubik Pi 3 from a USB webcam.
 
-<Frame caption="The cascade running live on the Rubik Pi 3 from a USB webcam: detection, segmentation, and person blur in real time.">
-  ![Live person-blur on the Rubik Pi 3](images/blurred-live.gif)
-</Frame>
+![Live person-blur on the Rubik Pi 3](images/blurred-live.gif)
 
 ### What you'll learn
 
@@ -136,9 +130,7 @@ print(json.dumps(runner.init()["model_parameters"], indent=2))
 runner.stop()
 ```
 
-<Frame caption="Stage 1 (YOLOX-Nano): fast object detection. It returns a person box, plus other COCO classes it spots in the scene.">
-  ![Stage 1 object detection on the sample frame](images/stage1-detection.jpg)
-</Frame>
+![Stage 1 object detection on the sample frame](images/stage1-detection.jpg)
 
 ## Stage 2: instance segmentation with BYOM Freeform
 
@@ -172,13 +164,9 @@ YOLO("yolo11n-seg.pt").export(format="onnx", opset=17, dynamic=False, simplify=T
 2. Set the model output type to **Freeform**, input to 640x640, 3 channels, scaling `0..1`.
 3. Build from **Deployment > Linux (AARCH64)** and place the `.eim` in `models/`.
 
-<Frame caption="BYOM upload with the Freeform output type and 640x640 / 0..1 settings.">
-  ![BYOM upload settings: Freeform output, 640x640, 0..1 scaling](images/upload-model.jpg)
-</Frame>
+![BYOM upload settings: Freeform output, 640x640, 0..1 scaling](images/upload-model.jpg)
 
-<Frame caption="Building the Linux (AARCH64) .eim from the Edge Impulse Deployment page.">
-  ![Edge Impulse AARCH64 deployment](images/deploy-aarch64.jpg)
-</Frame>
+![Edge Impulse AARCH64 deployment](images/deploy-aarch64.jpg)
 
 ### Working with the raw output
 
@@ -232,9 +220,7 @@ To check Stage 2 on its own against a single image:
 python test_eim.py --eim models/stage2-yolo11nseg-aarch64.eim --image samples/sample-frame.jpg --metadata model_metadata.json
 ```
 
-<Frame caption="Stage 2 (YOLO11n-seg via BYOM Freeform): pixel-accurate instance masks after post-processing.">
-  ![Stage 2 instance segmentation on the sample frame](images/stage2-segmentation.jpg)
-</Frame>
+![Stage 2 instance segmentation on the sample frame](images/stage2-segmentation.jpg)
 
 ## Running the cascade
 
@@ -248,9 +234,7 @@ python cascade/cascade_inference.py \
   --image samples/sample-frame.jpg --output result.jpg
 ```
 
-<Frame caption="Cascade output: Stage 2 instance masks in color, with the matched Stage 1 detection box in white.">
-  ![Two-stage cascade result on the sample frame](images/cascade-result.jpg)
-</Frame>
+![Two-stage cascade result on the sample frame](images/cascade-result.jpg)
 
 On the board (set up earlier), run the cascade over a video file with the split-view demo. This path needs no display:
 
@@ -270,9 +254,7 @@ Live USB-webcam input is also supported (see [Live webcam demo](#live-webcam-dem
 
 `cascade/person_blur.py` uses the cascade to anonymize people. A bounding-box blur covers a rectangle and takes the background with it. An instance mask follows the body outline, so the blur lands on the person and nothing else.
 
-<Frame caption="The person-blur application: Stage 1 detection, Stage 2 mask, and the final blurred output.">
-  ![Person-blur three-panel view](images/person-blur-panels.jpg)
-</Frame>
+![Person-blur three-panel view](images/person-blur-panels.jpg)
 
 The blur uses the union of all person masks as a blend map. A multi-pass Gaussian (passes set by `--blur-passes`) anonymizes faces and clothing:
 
@@ -303,9 +285,7 @@ The same masks are a starting point for other applications too, such as backgrou
 
 ### Live webcam demo
 
-<Frame caption="The cascade running live on the Rubik Pi 3: the QCS6490 and a USB webcam drive the three-panel person-blur demo on an attached monitor.">
-  ![Rubik Pi 3 running the live person-blur demo](images/live-qcs6490.jpg)
-</Frame>
+![Rubik Pi 3 running the live person-blur demo](images/live-qcs6490.jpg)
 
 To run on a live USB webcam instead of a file, drop the `--video` flag. The preview window opens on the board's display, so launch it from a terminal on the board itself:
 
